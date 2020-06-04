@@ -1,2 +1,2 @@
 # noa
-Neovim live share plugin
+Neovim live share Server
