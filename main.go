@@ -2,12 +2,15 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/higashi000/noa/initclient"
+	"github.com/higashi000/noa/recvmsg"
 	"gopkg.in/olahol/melody.v1"
 )
 
 type Msg struct {
 	Text string `json:"text"`
-	Name string `json:"name"`
+	Line int    `json:"line"`
+	Uuid string `json:"uuid"`
 }
 
 func main() {
@@ -18,16 +21,8 @@ func main() {
 		m.HandleRequest(c.Writer, c.Request)
 	})
 
-	r.POST("/send", func(c *gin.Context) {
-		var tmp Msg
-		c.BindJSON(&tmp)
-
-		m.Broadcast([]byte(tmp.Name + ": " + tmp.Text))
-	})
-
-	m.HandleMessage(func(s *melody.Session, msg []byte) {
-		m.Broadcast(msg)
-	})
+	recvmsg.RecvMsg(r, m)
+	initclient.InitClient(r)
 
 	r.Run(":5000")
 }
