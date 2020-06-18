@@ -10,9 +10,10 @@ import (
 )
 
 type Msg struct {
-	Text string `json:"text"`
-	Line int    `json:"line"`
-	Uuid string `json:"uuid"`
+	Text   string `json:"text"`
+	Line   int    `json:"line"`
+	Uuid   string `json:"uuid"`
+	RoomID string `json:"roomid"`
 }
 
 func RecvMsg(r *gin.Engine, m *melody.Melody) {
@@ -29,6 +30,9 @@ func RecvMsg(r *gin.Engine, m *melody.Melody) {
 
 		m.Broadcast([]byte(returnData))
 
+		m.BroadcastFilter([]byte(returnData), func(q *melody.Session) bool {
+			return q.Request.URL.Path == recv.RoomID
+		})
 		c.JSON(http.StatusOK, "ok")
 	})
 }

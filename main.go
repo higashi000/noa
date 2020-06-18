@@ -7,17 +7,11 @@ import (
 	"gopkg.in/olahol/melody.v1"
 )
 
-type Msg struct {
-	Text string `json:"text"`
-	Line int    `json:"line"`
-	Uuid string `json:"uuid"`
-}
-
 func main() {
 	r := gin.Default()
 	m := melody.New()
 
-	r.GET("/ws", func(c *gin.Context) {
+	r.GET("/channel/:name/ws", func(c *gin.Context) {
 		m.HandleRequest(c.Writer, c.Request)
 	})
 
