@@ -37,6 +37,7 @@ func RegistChannel(r *gin.Engine, db *mongo.Database) {
 
 			if recvChannelData.RoomId == tmp.RoomId {
 				c.JSON(http.StatusOK, `{"status": "false", "message":"This ID is already used."}`)
+				return
 			}
 		}
 
