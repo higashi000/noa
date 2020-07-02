@@ -3,6 +3,7 @@ package router
 import (
 	"context"
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/higashi000/noa/initclient"
@@ -36,6 +37,10 @@ func NewRouter() *gin.Engine {
 
 	r.GET("/channel/:name/ws", func(c *gin.Context) {
 		m.HandleRequest(c.Writer, c.Request)
+	})
+
+	r.GET("/noa/registpage/", func(c *gin.Context) {
+		http.ServeFile(c.Writer, c.Request, "page/index.html")
 	})
 
 	return r

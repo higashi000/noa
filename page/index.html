@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8" />
+   <title>Noa</title>
+   <script>
+      function MakeChannel() {
+         let channelName = document.getElementById('name').value;
+         console.log(channelName);
+      }
+   </script>
+</head>
+<body>
+   <h1>チャンネル登録</h1>
+   <div>
+      <h2>チャンネル名</h2>
+      <input type="text" id="name" />
+   </div>
+   <div>
+      <h2>管理者名</h2>
+      <input type="text" id="admin" />
+   </div>
+   <div>
+      <input type="button" value="登録" onclick="MakeChannel()" />
+   </div>
+</body>
+</html>
