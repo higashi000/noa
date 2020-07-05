@@ -1,11 +1,17 @@
 package recvmsg
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/higashi000/noa/registchannel"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/olahol/melody.v1"
 )
 
@@ -16,23 +22,38 @@ type Msg struct {
 	RoomID string   `json:"roomid"`
 }
 
-func RecvMsg(r *gin.Engine, m *melody.Melody) {
+func RecvMsg(r *gin.Engine, m *melody.Melody, channelColle *mongo.Collection) {
 	var recv Msg
+
+	findOptions := options.FindOne()
 
 	r.POST("/send", func(c *gin.Context) {
 		c.BindJSON(&recv)
 
-		//strLine := strconv.Itoa(recv.Line)
+		var doc registchannel.Channel
 
-		//returnData := `{"line": ` + strLine + `, "text":[` + recv.Text + `], "uuid":"` + recv.Uuid + `"}`
+		err := channelColle.FindOne(context.Background(), bson.M{"roomid": recv.RoomID}, findOptions).Decode(&doc)
+		if err != nil {
+			log.Println(err)
+		}
+
+		update := bson.D{{"$set",
+			bson.D{
+				{"roomid", doc.RoomId},
+				{"password", doc.Password},
+				{"admin", doc.Admin},
+				{"text", recv.Text},
+			},
+		}}
+		res, err := channelColle.UpdateOne(context.Background(), doc, update)
+		if err != nil {
+			log.Println(err)
+		}
+		fmt.Println(res)
 
 		sendJSON, _ := json.Marshal(recv)
 
-		//		m.Broadcast([]byte(sendJSON))
-
-		fmt.Println(string(sendJSON))
 		m.BroadcastFilter([]byte(sendJSON), func(q *melody.Session) bool {
-			fmt.Println(q.Request.URL.Path)
 			return q.Request.URL.Path == "/channel/"+recv.RoomID+"/ws"
 		})
 		c.JSON(http.StatusOK, "ok")

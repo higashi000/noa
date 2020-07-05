@@ -12,16 +12,16 @@ import (
 )
 
 type Channel struct {
-	RoomId   string `json:"roomid" bson:"roomid"`
-	Password string `json:"password" bson:"password"`
-	Admin    string `json:"admin" bson:"admin"`
+	RoomId   string   `json:"roomid" bson:"roomid"`
+	Password string   `json:"password" bson:"password"`
+	Admin    string   `json:"admin" bson:"admin"`
+	Text     []string `json:"text" bson:"text"`
 }
 
-func RegistChannel(r *gin.Engine, db *mongo.Database) {
-	channelColl := db.Collection("channel")
+func RegistChannel(r *gin.Engine, channelColle *mongo.Collection) {
 
 	findOptions := options.Find()
-	cur, err := channelColl.Find(context.TODO(), bson.D{{}}, findOptions)
+	cur, err := channelColle.Find(context.TODO(), bson.D{{}}, findOptions)
 	if err != nil {
 		log.Println(err)
 	}
@@ -41,7 +41,7 @@ func RegistChannel(r *gin.Engine, db *mongo.Database) {
 			}
 		}
 
-		res, err := channelColl.InsertOne(context.Background(), recvChannelData)
+		res, err := channelColle.InsertOne(context.Background(), recvChannelData)
 		if err != nil {
 			log.Println(err)
 		}

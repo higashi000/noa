@@ -26,13 +26,14 @@ func NewRouter() *gin.Engine {
 	}
 
 	db := client.Database("noa")
+	channel := db.Collection("noa")
 
 	m := melody.New()
 
 	r := gin.Default()
 
-	registchannel.RegistChannel(r, db)
-	recvmsg.RecvMsg(r, m)
+	registchannel.RegistChannel(r, channel)
+	recvmsg.RecvMsg(r, m, channel)
 	initclient.InitClient(r)
 
 	r.GET("/channel/:name/ws", func(c *gin.Context) {
