@@ -34,7 +34,7 @@ func NewRouter() *gin.Engine {
 
 	registchannel.RegistChannel(r, channel)
 	recvmsg.RecvMsg(r, m, channel)
-	initclient.InitClient(r)
+	initclient.InitClient(r, channel)
 
 	r.GET("/channel/:name/ws", func(c *gin.Context) {
 		m.HandleRequest(c.Writer, c.Request)
