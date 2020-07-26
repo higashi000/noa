@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/higashi000/noa/registchannel"
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -19,26 +20,31 @@ type InitialData struct {
 	Text []string `json:"text"`
 }
 
-func MakeClientUUID() string {
+func MakeClientUUID() (string, error) {
 	u, err := uuid.NewRandom()
 	if err != nil {
-		log.Println(err)
+		return "", errors.Wrap(err, "Failed generate uuid")
 	}
 
-	return u.String()
+	return u.String(), nil
 }
 
 func InitClient(r *gin.Engine, channelColle *mongo.Collection) {
 	findOptions := options.FindOne()
 
 	r.GET("/init", func(c *gin.Context) {
-		uuid := MakeClientUUID()
+		uuid, err := MakeClientUUID()
+
+		if err != nil {
+			fmt.Println(err)
+			uuid = ""
+		}
 
 		var doc registchannel.Channel
 
 		roomid := c.Query("roomid")
 
-		err := channelColle.FindOne(context.Background(), bson.M{"roomid": roomid}, findOptions).Decode(&doc)
+		err = channelColle.FindOne(context.Background(), bson.M{"roomid": roomid}, findOptions).Decode(&doc)
 		if err != nil {
 			log.Println(err)
 		}
