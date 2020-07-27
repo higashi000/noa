@@ -56,6 +56,7 @@ func RecvMsg(r *gin.Engine, m *melody.Melody, channelColle *mongo.Collection) {
 		m.BroadcastFilter([]byte(sendJSON), func(q *melody.Session) bool {
 			return q.Request.URL.Path == "/channel/"+recv.RoomID+"/ws"
 		})
-		c.JSON(http.StatusOK, "ok")
+		fmt.Println(doc.Text)
+		c.JSON(http.StatusOK, doc)
 	})
 }
