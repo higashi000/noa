@@ -3,9 +3,10 @@ package router
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
-	"github.com/go-playground/assert/v2"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestInitClient(t *testing.T) {
@@ -21,5 +22,19 @@ func TestInitClient(t *testing.T) {
 }
 
 func TestRecvMsg(t *testing.T) {
+	router := NewRouter()
 
+	msgData := `
+   {"roomid":"testdata","text":["test1","test2","test3"],"password":"testdata","admin":""}
+   `
+
+	req := httptest.NewRequest("POST", "/send", strings.NewReader(msgData))
+	req.Header.Set("Content-Type", "application/json")
+
+	rec := httptest.NewRecorder()
+
+	router.ServeHTTP(rec, req)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.JSONEq(t, msgData, rec.Body.String())
 }
