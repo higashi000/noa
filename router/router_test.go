@@ -38,3 +38,19 @@ func TestRecvMsg(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rec.Code)
 	assert.JSONEq(t, msgData, rec.Body.String())
 }
+
+func TestRegistChannel(t *testing.T) {
+	router := NewRouter()
+
+	sendData := `{"roomid":"testroom"}`
+	recvData := `{"message":"This ID is already used.","status":"false"}`
+
+	req := httptest.NewRequest("POST", "/noa/registchannel", strings.NewReader(sendData))
+	req.Header.Set("Content-Type", "application/json")
+
+	rec := httptest.NewRecorder()
+
+	router.ServeHTTP(rec, req)
+
+	assert.Equal(t, http.StatusOK, rec.Code)
+}
