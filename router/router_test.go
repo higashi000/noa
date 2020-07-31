@@ -43,7 +43,6 @@ func TestRegistChannel(t *testing.T) {
 	router := NewRouter()
 
 	sendData := `{"roomid":"testroom"}`
-	recvData := `{"message":"This ID is already used.","status":"false"}`
 
 	req := httptest.NewRequest("POST", "/noa/registchannel", strings.NewReader(sendData))
 	req.Header.Set("Content-Type", "application/json")
