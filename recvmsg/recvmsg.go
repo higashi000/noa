@@ -37,6 +37,22 @@ func RecvMsg(r *gin.Engine, m *melody.Melody, channelColle *mongo.Collection) {
 			log.Println(err)
 		}
 
+		if len(recv.Text) == len(doc.Text) {
+			necessaryUpdate := false
+
+			for i := 0; i < len(recv.Text); i++ {
+				if recv.Text[i] != doc.Text[i] {
+					necessaryUpdate = true
+					break
+				}
+			}
+
+			if !necessaryUpdate {
+				c.JSON(http.StatusOK, doc)
+				return
+			}
+		}
+
 		update := bson.D{{"$set",
 			bson.D{
 				{"roomid", doc.RoomId},
