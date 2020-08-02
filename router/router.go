@@ -43,6 +43,9 @@ func NewRouter() *gin.Engine {
 	r.GET("/noa/registpage/", func(c *gin.Context) {
 		http.ServeFile(c.Writer, c.Request, "page/index.html")
 	})
+	r.GET("/noa/registpage/js", func(c *gin.Context) {
+		http.ServeFile(c.Writer, c.Request, "page/index.js")
+	})
 
 	return r
 }
