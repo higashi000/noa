@@ -47,5 +47,9 @@ func NewRouter() *gin.Engine {
 		http.ServeFile(c.Writer, c.Request, "page/index.js")
 	})
 
+	r.GET("/noa/favicon", func(c *gin.Context) {
+		http.ServeFile(c.Writer, c.Request, "page/favicon.ico")
+	})
+
 	return r
 }
