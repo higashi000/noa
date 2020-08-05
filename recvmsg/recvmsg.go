@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/higashi000/noa/registchannel"
@@ -70,7 +71,7 @@ func RecvMsg(r *gin.Engine, m *melody.Melody, channelColle *mongo.Collection) {
 		sendJSON, _ := json.Marshal(recv)
 
 		m.BroadcastFilter([]byte(sendJSON), func(q *melody.Session) bool {
-			return q.Request.URL.Path == "/channel/"+recv.RoomID+"/ws"
+			return q.Request.URL.Path == strings.Join([]string{"/channel", recv.RoomID, "ws"}, "/")
 		})
 		fmt.Println(doc.Text)
 		c.JSON(http.StatusOK, doc)
