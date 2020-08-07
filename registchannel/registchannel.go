@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -18,12 +19,12 @@ type Channel struct {
 	Text     []string `json:"text" bson:"text"`
 }
 
-func RegistChannel(r *gin.Engine, channelColle *mongo.Collection) {
+func RegistChannel(r *gin.Engine, channelColle *mongo.Collection) error {
 
 	findOptions := options.Find()
 	cur, err := channelColle.Find(context.TODO(), bson.D{{}}, findOptions)
 	if err != nil {
-		log.Println(err)
+		return errors.Wrap(err, "failed find collection")
 	}
 
 	r.POST("noa/registchannel", func(c *gin.Context) {
@@ -49,4 +50,6 @@ func RegistChannel(r *gin.Engine, channelColle *mongo.Collection) {
 		c.JSON(http.StatusOK, `{"status": "true", "message":"Correct"}`)
 		log.Println(res)
 	})
+
+	return nil
 }
