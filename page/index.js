@@ -1,8 +1,13 @@
 function MakeChannel() {
    let channelName = document.getElementById('name').value;
    let adminName = document.getElementById('admin').value;
+   let fileType = document.getElementById('filetype').value;
 
-   let data = { roomid: channelName, admin: adminName };
+   let data = {
+      roomid: channelName,
+      admin: adminName,
+      filetype: fileType,
+   };
 
    fetch("/noa/registchannel", {
       method: 'POST',

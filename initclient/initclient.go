@@ -16,8 +16,9 @@ import (
 )
 
 type InitialData struct {
-	Uuid string   `json:"uuid"`
-	Text []string `json:"text"`
+	Uuid     string   `json:"uuid"`
+	FileType string   `json:"filetype"`
+	Text     []string `json:"text"`
 }
 
 func MakeClientUUID() (string, error) {
@@ -52,8 +53,9 @@ func InitClient(r *gin.Engine, channelColle *mongo.Collection) {
 		fmt.Println(roomid)
 
 		initData := InitialData{
-			Uuid: uuid,
-			Text: doc.Text,
+			Uuid:     uuid,
+			FileType: doc.FileType,
+			Text:     doc.Text,
 		}
 
 		c.JSON(http.StatusOK, initData)

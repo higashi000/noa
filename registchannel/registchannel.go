@@ -16,6 +16,7 @@ type Channel struct {
 	RoomId   string   `json:"roomid" bson:"roomid"`
 	Password string   `json:"password" bson:"password"`
 	Admin    string   `json:"admin" bson:"admin"`
+	FileType string   `json:"filetype" bson:"filetype"`
 	Text     []string `json:"text" bson:"text"`
 }
 
